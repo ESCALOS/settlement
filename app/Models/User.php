@@ -68,20 +68,4 @@ class User extends Authenticatable implements FilamentUser
     {
         return str_ends_with($this->email, '@gmail.com') && $this->is_admin;
     }
-
-    public function Department() {
-        return $this->belongsTo(Department::class);
-    }
-
-    public function Warehouse() {
-        return $this->belongsToMany(Warehouse::class);
-    }
-
-    public function Requirements(){
-        return $this->hasMany(Requirement::class);
-    }
-
-    public function WarehouseOutputs(){
-        return $this->hasMany(WarehouseOutput::class);
-    }
 }

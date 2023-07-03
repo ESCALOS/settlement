@@ -8,7 +8,7 @@
             <x-button rounded cyan label="Importar" icon="upload" wire:click='openImportModal'/>
             @endif
             @if($button)
-            <x-button rounded positive label="{{ $label }}" icon="plus" wire:click="{{ $action }}"/>
+            <x-button rounded positive label="{{ $label }}" icon="plus" wire:click="$emit('openModal')"/>
             @endif
         </div>
     </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ConcentrateController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,5 @@ Route::middleware([
     'verified'
 ])->group(function () {
     Route::get('/', [HomeController::class,'index']);
+    Route::get('api/concentrate',[ConcentrateController::class,'__invoke'])->name('api.concentrate');
 });

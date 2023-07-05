@@ -70,6 +70,7 @@ class Modal extends Component
             'client.name.required' => "El nombre del cliente es requerido",
             'concentrateId.required' => "El concentrado es requerido",
             'wmt.required' => "La TMH es requerida",
+            'wmt.decimal' => "Máximo 3 decimales",
             'origin.required' => "La procedencia es requerida",
             'carriage.documentNumber.required' => 'El ruc del transportista es requerido',
             'carriage.name.required' => 'La razón social del transportuista es requerida',
@@ -86,8 +87,29 @@ class Modal extends Component
 
     public function openModal($orderId){
         $this->resetValidation();
-        $this->resetExcept('open');
+        $this->resetExcept('open','date');
         $this->orderId = $orderId;
+        if($orderId){
+            $order = Order::find($orderId);
+            $this->date = Carbon::parse($order->date)->format('Y-m-d');
+            $this->ticket = $order->ticket;
+            $this->client['id'] = $order->client_id;
+            $this->client['documentNumber'] = $order->Client->document_number;
+            $this->client['name'] = $order->Client->name;
+            $this->client['address'] = $order->Client->address;
+            $this->concentrateId = $order->concentrate_id;
+            $this->wmt = floatval($order->wmt);
+            $this->origin = $order->origin;
+            $this->carriage['id'] = $order->carriage_company_id;
+            $this->carriage['documentNumber'] = $order->Carriage->document_number;
+            $this->carriage['name'] = $order->Carriage->name;
+            $this->plateNumber = $order->plate_number;
+            $this->transportGuide = $order->transport_guide;
+            $this->deliveryNote = $order->delivery_note;
+            $this->weighing['id'] = $order->weighing_scale_company_id;
+            $this->weighing['documentNumber'] = $order->WeighingScale->document_number;
+            $this->weighing['name'] = $order->WeighingScale->name;
+        }
         $this->open = true;
     }
 
@@ -173,12 +195,12 @@ class Modal extends Component
             }
         }else{
             $order = new Order();
+            $order->batch = Helpers::createBatch('orders','O');
         }
         try{
             DB::transaction(function () use ($order){
                 $order->date = $this->date;
                 $order->ticket = strtoupper($this->ticket);
-                $order->batch = Helpers::createBatch('orders','O');
                 $order->client_id = $this->client['id'];
                 $order->concentrate_id = $this->concentrateId;
                 $order->wmt = $this->wmt;
@@ -195,12 +217,15 @@ class Modal extends Component
                 $this->reset('open');
             },3);
         }catch(PDOException $e){
-            $this->alert('error','Error :'.$e->getMessage());
+            $this->alert('error','Error :'.$e->getMessage(),[
+                'timer' => null,
+                'toast' => false
+            ]);
         }catch(Exception $e){
             $this->alert('error','Error :'.$e->getMessage());
         }
     }
-    
+
 
     public function render()
     {

@@ -4,22 +4,25 @@ namespace App\Helpers;
 use App\Models\Entity;
 use App\Models\Order;
 use Illuminate\Support\Carbon;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+
 class Helpers
 {
+    use LivewireAlert;
+
     /**
      * Verifica si el numero es un numero de RUC o DNI
      * @param string El numero que se quiere validar
      * @return string Devuelve dni o ruc en caso lo fuesen, sino devuelve el numero de digitos que tiene
      */
-    public static function checkDocumentNumber($documentNumber){
-        $documentLen = strlen($documentNumber);
-        switch ($documentLen) {
+    public static function checkDocumentNumber($documentNumber):string{
+        switch (strlen($documentNumber)) {
             case 8:
                 return "dni";
             case 11:
                 return "ruc";
             default:
-                return $documentLen;
+                return "";
         }
     }
 
@@ -65,6 +68,22 @@ class Helpers
             return null;
         }
     }
+
+    public function searchRuc($documentNumber):?Entity{
+        $documentType = $this->checkDocumentNumber($documentNumber);
+        if($documentType == ""){
+            return null;
+        }
+
+        //Buscar en la Base de Datos
+        if(Entity::where('document_number',$documentNumber)->exists()){
+            $entity = Entity::where('document_number',$documentNumber)->first();
+        }else{
+            $entity = $this->getEntityApi($documentNumber,$documentType);
+        }
+        return $entity;
+    }
+    
     public static function createBatch(){
         $fecha = 'O'.Carbon::now()->isoFormat('YYMM');
         $correlativo = '0001';

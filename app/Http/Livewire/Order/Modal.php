@@ -85,126 +85,72 @@ class Modal extends Component
     }
 
     public function updatedClient(){
-        if($this->client['documentNumber'] == ""){
-            return;
-        }
-        $documentType = Helpers::checkDocumentNumber($this->client['documentNumber']);
-        if($documentType != "ruc" && $documentType != "dni"){
-            $this->alert('error', 'Hay '.$documentType.' digitos', [
-                'position' => 'center',
-                'timer' => 2000,
-                'toast' => false,
-               ]);
+        $helper = new Helpers();
+        $entity = $helper->searchRuc($this->client['documentNumber']);
+        if(is_null($entity)){
             $this->client['name'] = '';
             $this->client['address'] = '';
-            return;
-        }
-
-        //Buscar en la Base de Datos
-        if(Entity::where('document_number',$this->client['documentNumber'])->exists()){
-            $entity = Entity::where('document_number',$this->client['documentNumber'])->first();
+            $this->alert('error', 'Numero incorrecto', [
+                'position' => 'top-right',
+                'timer' => 2000,
+                'toast' => true,
+            ]);
         }else{
-            $entity = Helpers::getEntityApi($this->client['documentNumber'],$documentType);
-            //Validar que se haya encontrado
-            if(is_null($entity)){
-                $this->client['name'] = '';
-                $this->client['address'] = '';
-                $this->alert('error', 'El cliente no existe', [
-                    'position' => 'top-right',
-                    'timer' => 2000,
-                    'toast' => true,
-                ]);
-                return;
-            }
+            $this->client['name'] = $entity->name;
+            $this->client['address'] = $entity->address;
+            $this->alert('success', 'Encontrado', [
+                'position' => 'top-right',
+                'timer' => 2000,
+                'toast' => true,
+            ]);
         }
-        $this->client['id'] = $entity->id;
-        $this->client['name'] = $entity->name;
-        $this->client['address'] = $entity->address;
-        $this->alert('success', 'Cliente Encontrado', [
-            'position' => 'top-right',
-            'timer' => 2000,
-            'toast' => true,
-        ]);
     }
 
     public function updatedCarriage(){
-        if($this->carriage['documentNumber'] == ""){
+        if(strlen($this->carriage['documentNumber'])){
+            $this->alert('warning','RUC incorrecto');
             return;
         }
-        $documentType = Helpers::checkDocumentNumber($this->carriage['documentNumber']);
-        if($documentType != "ruc" && $documentType != "dni"){
-            $this->alert('error', 'Hay '.$documentType.' digitos', [
-                'position' => 'center',
-                'timer' => 2000,
-                'toast' => false,
-               ]);
+        $helper = new Helpers();
+        $entity = $helper->searchRuc($this->carriage['documentNumber']);
+        if(is_null($entity)){
             $this->carriage['name'] = '';
-            return;
-        }
-
-        //Buscar en la Base de Datos
-        if(Entity::where('document_number',$this->carriage['documentNumber'])->exists()){
-            $entity = Entity::where('document_number',$this->carriage['documentNumber'])->first();
+            $this->alert('error', 'Numero incorrecto', [
+                'position' => 'top-right',
+                'timer' => 2000,
+                'toast' => true,
+            ]);
         }else{
-            $entity = Helpers::getEntityApi($this->carriage['documentNumber'],$documentType);
-            //Validar que se haya encontrado
-            if(is_null($entity)){
-                $this->carriage['name'] = '';
-                $this->alert('error', 'El transportista no existe', [
-                    'position' => 'top-right',
-                    'timer' => 2000,
-                    'toast' => true,
-                ]);
-                return;
-            }
+            $this->carriage['name'] = $entity->name;
+            $this->alert('success', 'Encontrado', [
+                'position' => 'top-right',
+                'timer' => 2000,
+                'toast' => true,
+            ]);
         }
-        $this->carriage['id'] = $entity->id;
-        $this->carriage['name'] = $entity->name;
-        $this->alert('success', 'Transportista encontrado', [
-            'position' => 'top-right',
-            'timer' => 2000,
-            'toast' => true,
-        ]);
     }
     public function updatedWeighing(){
-        if($this->weighing['documentNumber'] == ""){
+        if(strlen($this->weighing['documentNumber'])){
+            $this->alert('warning','RUC incorrecto');
             return;
         }
-        $this->alert('info','Buscando...');
-        $documentType = Helpers::checkDocumentNumber($this->weighing['documentNumber']);
-        if($documentType != "ruc" && $documentType != "dni"){
-            $this->alert('error', 'Hay '.$documentType.' digitos', [
-                'position' => 'center',
-                'timer' => 2000,
-                'toast' => false,
-               ]);
+        $helper = new Helpers();
+        $entity = $helper->searchRuc($this->weighing['documentNumber']);
+        if(is_null($entity)){
             $this->weighing['name'] = '';
-            return;
-        }
-
-        //Buscar en la Base de Datos
-        if(Entity::where('document_number',$this->weighing['documentNumber'])->exists()){
-            $entity = Entity::where('document_number',$this->weighing['documentNumber'])->first();
+            $this->alert('error', 'Numero incorrecto', [
+                'position' => 'top-right',
+                'timer' => 2000,
+                'toast' => true,
+            ]);
         }else{
-            $entity = Helpers::getEntityApi($this->weighing['documentNumber'],$documentType);
-            //Validar que se haya encontrado
-            if(is_null($entity)){
-                $this->weighing['name'] = '';
-                $this->alert('error', 'El transportista no existe', [
-                    'position' => 'top-right',
-                    'timer' => 2000,
-                    'toast' => true,
-                ]);
-                return;
-            }
+            $this->weighing['name'] = $entity->name;
+            $this->alert('success', 'Encontrado', [
+                'position' => 'top-right',
+                'timer' => 2000,
+                'toast' => true,
+            ]);
         }
-        $this->weighing['id'] = $entity->id;
-        $this->weighing['name'] = $entity->name;
-        $this->alert('success', 'Transportista encontrado', [
-            'position' => 'top-right',
-            'timer' => 2000,
-            'toast' => true,
-        ]);
     }
 
     public function save(){

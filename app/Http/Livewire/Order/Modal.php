@@ -2,11 +2,15 @@
 
 namespace App\Http\Livewire\Order;
 
-use App\Models\Entity;
 use App\Helpers\Helpers;
+use App\Models\Order;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use PDOException;
 
 class Modal extends Component
 {
@@ -77,10 +81,13 @@ class Modal extends Component
     }
 
     public function mount(){
-        $this->date = Carbon::now()->toDateString();;
+        $this->date = Carbon::now()->toDateString();
     }
 
-    public function openModal(){
+    public function openModal($orderId){
+        $this->resetValidation();
+        $this->resetExcept('open');
+        $this->orderId = $orderId;
         $this->open = true;
     }
 
@@ -96,6 +103,7 @@ class Modal extends Component
                 'toast' => true,
             ]);
         }else{
+            $this->client['id'] = $entity->id;
             $this->client['name'] = $entity->name;
             $this->client['address'] = $entity->address;
             $this->alert('success', 'Encontrado', [
@@ -107,7 +115,7 @@ class Modal extends Component
     }
 
     public function updatedCarriage(){
-        if(strlen($this->carriage['documentNumber'])){
+        if(strlen($this->carriage['documentNumber']) != 11){
             $this->alert('warning','RUC incorrecto');
             return;
         }
@@ -121,6 +129,7 @@ class Modal extends Component
                 'toast' => true,
             ]);
         }else{
+            $this->carriage['id'] = $entity->id;
             $this->carriage['name'] = $entity->name;
             $this->alert('success', 'Encontrado', [
                 'position' => 'top-right',
@@ -130,7 +139,7 @@ class Modal extends Component
         }
     }
     public function updatedWeighing(){
-        if(strlen($this->weighing['documentNumber'])){
+        if(strlen($this->weighing['documentNumber']) != 11){
             $this->alert('warning','RUC incorrecto');
             return;
         }
@@ -144,6 +153,7 @@ class Modal extends Component
                 'toast' => true,
             ]);
         }else{
+            $this->weighing['id'] = $entity->id;
             $this->weighing['name'] = $entity->name;
             $this->alert('success', 'Encontrado', [
                 'position' => 'top-right',
@@ -155,7 +165,40 @@ class Modal extends Component
 
     public function save(){
         $this->validate();
-
+        if($this->orderId > 0){
+            $order = Order::find($this->orderId);
+            if($order->settled){
+                $this->alert('error','Orden ya liquidada');
+                return;
+            }
+        }else{
+            $order = new Order();
+        }
+        try{
+            DB::transaction(function () use ($order){
+                $order->date = $this->date;
+                $order->ticket = strtoupper($this->ticket);
+                $order->batch = Helpers::createBatch('orders','O');
+                $order->client_id = $this->client['id'];
+                $order->concentrate_id = $this->concentrateId;
+                $order->wmt = $this->wmt;
+                $order->origin = strtoupper($this->origin);
+                $order->carriage_company_id = $this->carriage['id'];
+                $order->plate_number = strtoupper($this->plateNumber);
+                $order->transport_guide = strtoupper($this->transportGuide);
+                $order->delivery_note = strtoupper($this->deliveryNote);
+                $order->weighing_scale_company_id = $this->weighing['id'];
+                $order->user_id = Auth::user()->id;
+                $order->save();
+                $this->alert('success','Guardado con éxito');
+                $this->emit('refreshDatatable');
+                $this->reset('open');
+            },3);
+        }catch(PDOException $e){
+            $this->alert('error','Error :'.$e->getMessage());
+        }catch(Exception $e){
+            $this->alert('error','Error :'.$e->getMessage());
+        }
     }
     
 

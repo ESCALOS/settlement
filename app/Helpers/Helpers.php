@@ -2,8 +2,8 @@
 
 namespace App\Helpers;
 use App\Models\Entity;
-use App\Models\Order;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Helpers
@@ -84,15 +84,15 @@ class Helpers
         return $entity;
     }
     
-    public static function createBatch(){
-        $fecha = 'O'.Carbon::now()->isoFormat('YYMM');
-        $correlativo = '0001';
-        if(Order::limit(1)->exists()){
-            $last_batch = explode("-",Order::orderBy('batch','desc')->first()->batch);
-            if($fecha == $last_batch[0]){
-                $correlativo = str_pad(strval(intval($last_batch[1])+1),4,0,STR_PAD_LEFT);
+    public static function createBatch(string $table,string $preffix):string{
+        $date = $preffix.''.Carbon::now()->isoFormat('YYMM');
+        $correlative = '0001';
+        if(DB::table($table)->limit(1)->exists()){
+            $last_batch = explode("-",DB::table($table)->orderBy('batch','desc')->first()->batch);
+            if($date == $last_batch[0]){
+                $correlative = str_pad(strval(intval($last_batch[1])+1),4,0,STR_PAD_LEFT);
             }
         }
-        return $fecha.'-'.$correlativo;
+        return $date.'-'.$correlative;
     }
 }

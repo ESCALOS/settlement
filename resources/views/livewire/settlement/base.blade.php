@@ -4,4 +4,5 @@
         <livewire:settlement.settlement-table>
     </div>
     <livewire:settlement.modal>
+    <livewire:settlement.detail>
 </div>

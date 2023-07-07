@@ -451,7 +451,7 @@ class Modal extends Component
                 $payableTotal->unit_price_silver = $this->internationalPayment['silver'] - $this->requirement['protection']['silver'];
                 $payableTotal->total_price_silver = floor(($payableTotal->unit_price_silver*$payableTotalSilverPercent)*1000)/1000;
 
-                $payableTotalGoldPercent =floor(((floor($this->law['gold']*$this->law['goldFactor']*1000)/1000)*$this->internationalPayment['gold']/100-$this->requirement['deduction']['gold'])*100)/100;
+                $payableTotalGoldPercent =floor(((floor($this->law['gold']*$this->law['goldFactor']*1000)/1000)*$this->percentagePayable['gold']/100-$this->requirement['deduction']['gold'])*100)/100;
                 $payableTotal->unit_price_gold = $this->internationalPayment['gold'] - $this->requirement['protection']['gold'];
                 $payableTotal->total_price_gold = floor(($payableTotal->unit_price_gold*$payableTotalGoldPercent)*1000)/1000;
 

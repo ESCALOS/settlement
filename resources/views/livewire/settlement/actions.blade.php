@@ -1,5 +1,5 @@
 <div>
-    <x-button.circle title="Ver" sky icon="eye" wire:click="$emitTo('settlement.modal-detail','openModal',{{ $id }},0)"/>
+    <x-button.circle title="Ver" sky icon="eye" wire:click="$emit('showDetails',{{ $id }})"/>
     @if ($wmt == 0)
     <x-button.circle title="Editar" warning icon="pencil" wire:click="$emitTo('settlement.modal','openModal',{{ $id }},0)"/>
     <x-button.circle title="Eliminar" negative icon="trash"

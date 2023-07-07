@@ -98,8 +98,8 @@
                 <x-button flat label="{{ __('Cancel') }}" x-on:click="close" />
                 <x-button primary spinner label="{{ __('Save') }}"
                     x-on:confirm="{
-                        title: 'Seguro de Eliminar?',
-                        icon: 'error',
+                        title: '¿Seguro de Liquidar?',
+                        icon: 'info',
                         accept: {
                             label: 'Sí',
                             method: 'save',

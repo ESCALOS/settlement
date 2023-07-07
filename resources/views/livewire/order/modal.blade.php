@@ -38,13 +38,12 @@
         <x-input label="Nombre de la Balanza" readonly value="{{ $weighing['name'] }}"/>
     </div>
     <x-slot name="footer">
-        <div class="flex justify-{{$orderId ? 'between' : 'end'}} gap-x-4">
-            @if($orderId)
-            <x-button flat negative label="{{ __('Delete') }}" wire:click="delete" />
-            @endif
+        <div class="flex justify-end gap-x-4">
             <div class="flex">
                 <x-button flat label="{{ __('Cancel') }}" x-on:click="close" />
+                @if(!$settled)
                 <x-button primary spinner label="{{ __('Save') }}" wire:click="save"/>
+                @endif
             </div>
         </div>
     </x-slot>

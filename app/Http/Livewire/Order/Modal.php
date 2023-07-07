@@ -109,6 +109,7 @@ class Modal extends Component
             $this->weighing['id'] = $order->weighing_scale_company_id;
             $this->weighing['documentNumber'] = $order->WeighingScale->document_number;
             $this->weighing['name'] = $order->WeighingScale->name;
+            $this->settled = $order->settled;
         }
         $this->open = true;
     }

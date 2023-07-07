@@ -258,7 +258,7 @@ class Modal extends Component
         $this->internationalPayment['silver'] = floatval($settlement->InternationalPayment->silver);
         $this->internationalPayment['gold'] = floatval($settlement->InternationalPayment->gold);
         $this->law['copper'] = floatval($settlement->Law->copper);
-        $this->law['humidity'] = floatval($settlement->Law->hudimity);
+        $this->law['humidity'] = floatval($settlement->Law->humidity);
         $this->law['decrease'] = floatval($settlement->Law->decrease);
         $this->law['silver'] = floatval($settlement->Law->silver);
         $this->law['silverFactor'] = floatval($settlement->Law->silver_factor);
@@ -311,12 +311,27 @@ class Modal extends Component
                 $this->fillFields($settlement->id);
             }
             $this->orderId = $orderId;
+            $this->settlementId = $settlementId;
         }
         $this->open = true;
     }
 
     public function save(){
         $this->validate();
+        $this->alert('question', '¿Liquidar?', [
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Aceptar',
+            'showDenyButton' => true,
+            'denyButtonText' => 'Cancelar',
+            'onConfirmed' => 'settle',
+            'onDenied' => null,
+            'position' => 'center',
+            'toast' => false,
+            'timer'=> null
+        ]);
+    }
+
+    public function settle(){
         try {
             DB::transaction(function () {
                 $order = Order::find($this->orderId);

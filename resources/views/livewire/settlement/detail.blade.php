@@ -176,6 +176,7 @@
         <div class="flex justify-end gap-x-4">
             <div class="flex">
                 <x-button flat label="{{ __('Cancel') }}" x-on:click="close" />
+                <x-button label="Exportar PDF" spinner="printSettlement" rose icon="printer" wire:click='printSettlement'/>
             </div>
         </div>
     </x-slot>

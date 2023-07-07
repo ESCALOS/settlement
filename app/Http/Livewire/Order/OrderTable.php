@@ -63,7 +63,7 @@ class OrderTable extends DataTableComponent
                 ->filter(function (Builder $builder, string $value){
                     if($value === '1'){
                         $builder->where('settled',true);
-                    }elseif($value === '0'){
+                    }elseif($value === '2'){
                         $builder->where('settled',false);
                     }
                 }),

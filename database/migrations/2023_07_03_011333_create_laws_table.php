@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('laws', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('settlement_id')->constrained();
+            $table->foreignId('settlement_id')->constrained()->onDelete('cascade');
             $table->unsignedDecimal('copper',12,4);
             $table->unsignedDecimal('humidity',12,4);
             $table->unsignedDecimal('decrease',12,4);

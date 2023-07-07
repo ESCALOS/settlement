@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('refinements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('settlement_id')->constrained();
+            $table->foreignId('settlement_id')->constrained()->onDelete('cascade');
             $table->unsignedDecimal('copper',12,4);
             $table->unsignedDecimal('silver',12,4);
             $table->unsignedDecimal('gold',12,4);

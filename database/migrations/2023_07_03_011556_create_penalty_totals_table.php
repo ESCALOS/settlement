@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('penalty_totals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('settlement_id')->constrained();
+            $table->foreignId('settlement_id')->constrained()->onDelete('cascade');
             $table->decimal('leftover_arsenic',12,4);
             $table->decimal('leftover_antomony',12,4);
             $table->decimal('leftover_lead',12,4);

@@ -102,7 +102,7 @@ class Modal extends Component
         'mercury' => 10,
     ];
 
-    protected $listeners = ['openModal','settle'];
+    protected $listeners = ['openModal'];
 
     protected function rules(){
         return [
@@ -318,23 +318,12 @@ class Modal extends Component
 
     public function save(){
         $this->validate();
-        $this->alert('question', '¿Liquidar?', [
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Aceptar',
-            'showDenyButton' => true,
-            'denyButtonText' => 'Cancelar',
-            'onConfirmed' => 'settle',
-            'onDenied' => null,
-            'position' => 'center',
-            'toast' => false,
-            'timer'=> null
-        ]);
-    }
-
-    public function settle(){
         try {
             DB::transaction(function () {
                 $order = Order::find($this->orderId);
+                if($order->settle){
+                    throw new \Exception("La orden ya está liquidada");
+                }
                 $order->settled = true;
 
                 if($this->settlementId){

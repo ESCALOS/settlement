@@ -16,6 +16,9 @@
                     <x-nav-link href="{{ route('admin.orders') }}" :active="request()->routeIs('admin.orders')">
                         {{ __('Orders') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('admin.settlements') }}" :active="request()->routeIs('admin.settlements')">
+                        {{ __('Settlements') }}
+                    </x-nav-link>
                 @endrole
                 </div>
             </div>
@@ -126,9 +129,12 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            @role('ALMACEN')
-            <x-responsive-nav-link href="{{ route('storekeeper.warehouse') }}" :active="request()->routeIs('storekeeper.warehouse')">
-                {{ __('Warehouse') }}
+            @role('ADMINISTRADOR')
+            <x-responsive-nav-link href="{{ route('admin.orders') }}" :active="request()->routeIs('admin.orders')">
+                {{ __('Orders') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('admin.orders') }}" :active="request()->routeIs('admin.orders')">
+                {{ __('Settlements') }}
             </x-responsive-nav-link>
             @endrole
         </div>

@@ -42,5 +42,6 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         @livewireScripts
         <x-livewire-alert::scripts />
+        <x-dialog z-index="z-50" blur="md" align="center" />
     </body>
 </html>

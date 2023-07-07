@@ -8,29 +8,16 @@ use App\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 
 class OrderTable extends DataTableComponent
 {
     use LivewireAlert;
-
-    public $orderId = [];
-
-    protected $listeners = [
-        'refreshDatatable' => '$refresh',
-        'clearSelected' => 'clearSelected',
-        'delete' => 'delete'
-    ];
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setAdditionalSelects(['orders.settled']);
         $this->setSearchLazy();
-        $this->setBulkActions([
-            'deleteBulk' => 'Eliminar',
-        ]);
     }
 
     public function builder(): Builder
@@ -83,52 +70,16 @@ class OrderTable extends DataTableComponent
         ];
     }
 
-    public function deleteBulk() {
-        $this->confirmDelete($this->getSelected());
-    }
-
-    public function confirmDelete($orders){
-        $this->orderId = [];
-        $orders = Arr::wrap($orders);
-        $title = "";
-        if(is_array($orders)){
-            foreach($orders as $order){
-                if(!Order::find($order)->settled){
-                    $this->orderId[] = $order;
-                }
-            }
-        }
-        $selected = sizeof($this->orderId);
-        if(!$this->orderId){
-            $this->alert('error','No se puede eliminar');
-            return;
-        }else if($selected == 1){
-            $title = "¿Seguro de eliminar la orden?";
+    public function delete($id){
+        if(Order::find($id)->settled){
+            $this->alert('error','Orden Liquidada');
         }else{
-            $title = "¿Seguro de eliminar {$selected} órdenes?";
+           $deleteCount = Order::where('id',$id)->where('settled',false)->delete();
         }
-
-        $this->alert('question', $title, [
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Aceptar',
-            'showDenyButton' => true,
-            'denyButtonText' => 'Cancelar',
-            'onConfirmed' => 'delete',
-            'position' => 'center',
-            'toast' => false,
-            'timer'=> null
-        ]);
-    }
-
-    public function delete(){
-        $deleteCount =  Order::whereIn('id',$this->orderId)->where('settled',false)->delete();
         if($deleteCount == 0){
-            $this->alert('error',"No se eliminó ninguna órden");
-        }else if($deleteCount == 1){
-            $this->alert('success',"Se eliminó una órden");
-        }else{
-            $this->alert('success',"Se eliminaron {$deleteCount} órdenes");
+            $this->alert('error',"No se eliminó la órden");
+        }else if($deleteCount > 0){
+            $this->alert('success',"Se eliminó la órden");
         }
-        $this->emit('clearSelected');
     }
 }

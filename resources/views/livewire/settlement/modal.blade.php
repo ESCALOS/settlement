@@ -96,7 +96,18 @@
         <div class="flex justify-end gap-x-4">
             <div class="flex">
                 <x-button flat label="{{ __('Cancel') }}" x-on:click="close" />
-                <x-button primary spinner label="{{ __('Save') }}" wire:click="save"/>
+                <x-button primary spinner label="{{ __('Save') }}"
+                    x-on:confirm="{
+                        title: 'Seguro de Eliminar?',
+                        icon: 'error',
+                        accept: {
+                            label: 'Sí',
+                            method: 'save',
+                        },
+                        reject: {
+                            label: 'No',
+                        }
+                    }"/>
             </div>
         </div>
     </x-slot>

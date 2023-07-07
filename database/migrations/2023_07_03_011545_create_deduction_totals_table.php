@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('deduction_totals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('settlement_id')->constrained();
+            $table->foreignId('settlement_id')->constrained()->onDelete('cascade');
             $table->decimal('unit_price_copper',12,4);
             $table->decimal('total_price_copper',12,4);
             $table->decimal('unit_price_silver',12,4);

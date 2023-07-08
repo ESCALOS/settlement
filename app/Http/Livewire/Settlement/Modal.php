@@ -104,7 +104,7 @@ class Modal extends Component
 
     protected $listeners = ['openModal'];
 
-    protected function rules(){
+    protected function rules():array{
         return [
             'internationalPayment.copper' => 'required|decimal:0,4',
             'internationalPayment.silver' => 'required|decimal:0,4',
@@ -152,7 +152,7 @@ class Modal extends Component
         ];
     }
 
-    public function messages(){
+    public function messages():array{
         return [
             'internationalPayment.copper.required' => 'El campo es requerido',
             'internationalPayment.silver.required' => 'El campo es requerido',
@@ -248,7 +248,7 @@ class Modal extends Component
         $this->date = Carbon::now()->toDateString();
     }
 
-    private function fillFields($settlementId){
+    private function fillFields(int $settlementId):void{
         $this->settlementId = $settlementId;
         $settlement = Settlement::find($settlementId);
         $this->orderId = $settlement->order_id;
@@ -298,7 +298,7 @@ class Modal extends Component
         $this->price['bismuth'] = number_format($settlement->PenaltyPrice->bismuth,3);
     }
 
-    public function openModal($settlementId,$orderId){
+    public function openModal(int $settlementId,int $orderId):void{
         $this->resetValidation();
         $this->resetExcept('open','date');
         if($settlementId){
@@ -316,7 +316,7 @@ class Modal extends Component
         $this->open = true;
     }
 
-    public function save(){
+    public function save():void{
         $this->validate();
         try {
             DB::transaction(function () {

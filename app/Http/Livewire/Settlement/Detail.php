@@ -13,7 +13,7 @@ class Detail extends Component
 
     protected $listeners = ['showDetails'];
 
-    public function showDetails($id){
+    public function showDetails(int $id):void{
         $this->settlementId = $id;
         $this->open = true;
     }

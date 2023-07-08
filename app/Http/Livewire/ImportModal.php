@@ -32,14 +32,14 @@ class ImportModal extends Component
         ];
     }
 
-    public function openImportModal($id=0){
+    public function openImportModal(int $id=0):void{
         $this->fileNumber++;
         $this->archivo = null;
         $this->openImport = true;
         $this->dependentId = $id;
     }
 
-    public function import(){
+    public function import():void{
         $this->validate();
         try {
             switch ($this->model) {

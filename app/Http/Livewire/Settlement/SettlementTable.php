@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use PDOException;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class SettlementTable extends DataTableComponent
 {
@@ -18,6 +19,7 @@ class SettlementTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setSearchLazy();
     }
 
     public function builder(): Builder
@@ -50,7 +52,36 @@ class SettlementTable extends DataTableComponent
         ];
     }
 
-    public function delete($id){
+    public function filters(): array{
+        return [
+            SelectFilter::make('¿Estado?')
+                ->options([
+                    '' => 'Todos',
+                    '1' => 'Mezcla Pendiente',
+                    '2' => 'Mezcla Parcial',
+                    '3' => 'Mezcla Total'
+                ])
+                ->filter(function (Builder $builder, string $value){
+                    if($value === '1'){
+                        $builder->where('settlements.wmt_shipped',0);
+                    }elseif($value === '2'){
+                        $builder->where('settlements.wmt_shipped','>',0)->where('settlements.wmt_shipped','<',DB::raw('orders.wmt'));
+                    }elseif($value === '3'){
+                        $builder->where('settlements.wmt_shipped',DB::raw('orders.wmt'));
+                    }
+                }),
+        ];
+    }
+
+    public function openModal($settlementId){
+        $this->emitTo('settlement.modal','openModal',$settlementId,0);
+    }
+
+    public function showDetails($id){
+        $this->emit('showDetails',$id);
+    }
+
+    public function delete(int $id):void{
         try {
             DB::transaction(function () use ($id) {
                 $orderId = Settlement::find($id)->order_id;

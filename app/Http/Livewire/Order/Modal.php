@@ -85,7 +85,7 @@ class Modal extends Component
         $this->date = Carbon::now()->toDateString();
     }
 
-    public function openModal($orderId){
+    public function openModal(int $orderId):void{
         $this->resetValidation();
         $this->resetExcept('open','date');
         $this->orderId = $orderId;
@@ -114,7 +114,7 @@ class Modal extends Component
         $this->open = true;
     }
 
-    public function updatedClient(){
+    public function updatedClient():void{
         $helper = new Helpers();
         $entity = $helper->searchRuc($this->client['documentNumber']);
         if(is_null($entity)){
@@ -137,7 +137,7 @@ class Modal extends Component
         }
     }
 
-    public function updatedCarriage(){
+    public function updatedCarriage():void{
         if(strlen($this->carriage['documentNumber']) != 11){
             $this->alert('warning','RUC incorrecto');
             return;
@@ -161,7 +161,7 @@ class Modal extends Component
             ]);
         }
     }
-    public function updatedWeighing(){
+    public function updatedWeighing():void{
         if(strlen($this->weighing['documentNumber']) != 11){
             $this->alert('warning','RUC incorrecto');
             return;
@@ -186,7 +186,7 @@ class Modal extends Component
         }
     }
 
-    public function save(){
+    public function save():void{
         $this->validate();
         if($this->orderId > 0){
             $order = Order::find($this->orderId);

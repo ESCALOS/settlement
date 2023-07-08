@@ -70,7 +70,15 @@ class OrderTable extends DataTableComponent
         ];
     }
 
-    public function delete($id){
+    public function openModal($id){
+        $this->emitTo('order.modal','openModal',$id);
+    }
+
+    public function openSettlement($id){
+        $this->emitTo('settlement.modal','openModal',0,$id);
+    }
+
+    public function delete(int $id):void{
         if(Order::find($id)->settled){
             $this->alert('error','Orden Liquidada');
         }else{

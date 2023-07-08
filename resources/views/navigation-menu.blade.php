@@ -22,6 +22,9 @@
                     <x-nav-link href="{{ route('admin.blending') }}" :active="request()->routeIs('admin.blending')">
                         {{ __('Blending') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('admin.dispatch') }}" :active="request()->routeIs('admin.dispatch')">
+                        {{ __('Dispatch') }}
+                    </x-nav-link>
                 @endrole
                 </div>
             </div>
@@ -141,6 +144,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('admin.blending') }}" :active="request()->routeIs('admin.blending')">
                 {{ __('Blending') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('admin.dispatch') }}" :active="request()->routeIs('admin.dispatch')">
+                {{ __('Dispatch') }}
             </x-responsive-nav-link>
             @endrole
         </div>

@@ -7,7 +7,7 @@
         <x-button.circle title="Liquidar" blue icon="cash" spinner="openSettlement" wire:click="openSettlement({{ $id }})"/>
         <x-button.circle title="Eliminar" negative icon="trash"
             x-on:confirm="{
-                title: 'Seguro de Eliminar?',
+                title: '¿Seguro de Eliminar?',
                 icon: 'error',
                 accept: {
                     label: 'Sí',

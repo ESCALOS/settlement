@@ -2,8 +2,13 @@
 
 namespace App\Http\Livewire\Blending;
 
+use App\Helpers\Helpers;
+use App\Models\Dispatch;
+use App\Models\DispatchDetail;
 use App\Models\Settlement;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -25,12 +30,23 @@ class Modal extends Component
 
     protected $listeners = ['openModal'];
 
-    public function mount(){
-        $this->date = Carbon::now()->toDateString();
+    protected function rules(){
+        return [
+            'settlements.*.wmt_to_blending' => 'required|decimal:0,3|gt:0|lte:settlements.*.wmt_missing',
+        ];
     }
 
-    public function updatingOpen(){
-        $this->alert('info','Cargando Datos');
+    public function messages(){
+        return [
+            'settlements.*.wmt_to_blending.required' => 'Digite el TMH',
+            'settlements.*.wmt_to_blending.decimal' => 'Debe tener máximo 3 decimales',
+            'settlements.*.wmt_to_blending.gt' => 'Digite una cantidad válida',
+            'settlements.*.wmt_to_blending.lte' => 'Digite una cantidad válida',
+        ];
+    }
+
+    public function mount(){
+        $this->date = Carbon::now()->toDateString();
     }
 
     /**
@@ -51,12 +67,53 @@ class Modal extends Component
         $this->open = true;
     }
 
+    public function blending():void{
+        $this->validate();
+        try{
+            DB::transaction(function(){
+                $dispatch = Dispatch::create([
+                    'batch' => Helpers::createBatch('dispatches','D'),
+                    'user_id' => Auth::user()->id,
+                    'date_blending' => $this->date,
+                ]);
+                foreach($this->settlements as $settlement){
+                    DispatchDetail::create([
+                        'dispatch_id' => $dispatch->id,
+                        'settlement_id' => $settlement['id'],
+                        'wmt' => $settlement['wmt_to_blending']
+                    ]);
+                    $blended = DB::table('dispatch_details')
+                        ->where('settlement_id', $settlement['id'])
+                        ->sum('wmt');
+                    if($blended > $settlement['wmt']){
+                        throw new \Exception("Datos modificados, actualice la página");
+                    }
+                }
+                $this->alert('success', '¡Blending Exitoso!', [
+                    'position' => 'center',
+                    'timer' => 2000,
+                    'toast' => true,
+                ]);
+            });
+            $this->emit('refreshDatatable');
+            $this->open = false;
+        }catch(\PDOException $e){
+            $this->alert('error', $e->getMessage());
+        }catch(\Exception $e){
+            $this->alert('error', $e->getMessage());
+        }
+    }
+
     public function updatedSettlements(){
         try {
             $this->wmtTotal = number_format(array_sum(array_column($this->settlements,'wmt_to_blending')),3);
         }catch(\Exception $e) {
             $this->wmtTotal = 'Todas las cantidades deben ser números';
         }
+    }
+
+    public function preview(){
+        $this->emitTo('blending.preview','openModal',$this->settlements);
     }
 
     public function render()

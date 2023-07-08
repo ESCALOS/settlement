@@ -5,6 +5,7 @@
     </div>
 
     <livewire:blending.modal>
+    <livewire:blending.preview>
     <livewire:settlement.modal>
     <livewire:settlement.detail>
 </div>

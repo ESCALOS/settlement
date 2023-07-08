@@ -19,11 +19,22 @@
     <x-slot name="footer">
         <div class="flex justify-between gap-x-4">
             <div>
-                <x-button primary spinner label="{{ __('Save') }}" wire:click="save"/>
+                <x-button info spinner="preview" icon="eye" wire:click="preview"/>
             </div>
             <div class="flex">
-                <x-button flat label="{{ __('Cancel') }}" x-on:click="close" />
-                <x-button primary spinner label="{{ __('Save') }}" wire:click="save"/>
+                <x-button flat label="{{ __('Close') }}" x-on:click="close" />
+                <x-button primary spinner label="{{ __('Save') }}"
+                x-on:confirm="{
+                    title: '¿Seguro de mezclar?',
+                    icon: 'warning',
+                    accept: {
+                        label: 'Sí',
+                        method: 'blending',
+                    },
+                    reject: {
+                        label: 'No',
+                    }
+                }"/>
             </div>
         </div>
     </x-slot>

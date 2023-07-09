@@ -35,7 +35,7 @@ class Modal extends Component
     public $orderId = 0;
     public $date;
     public $batch = "";
-    public $invoice = false;
+    public $invoice = 0;
     public $internationalPayment = [
         'copper' => '',
         'silver' => '',
@@ -251,6 +251,7 @@ class Modal extends Component
     private function fillFields(int $settlementId):void{
         $this->settlementId = $settlementId;
         $settlement = Settlement::find($settlementId);
+        $this->invoice = $settlement->with_invoice ? 1 : 0;
         $this->orderId = $settlement->order_id;
         $this->date = Carbon::parse($settlement->date)->format('Y-m-d');
         $this->batch = $settlement->batch;

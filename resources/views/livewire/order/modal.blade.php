@@ -25,7 +25,7 @@
         <x-input label="Procedencia" wire:model.defer='origin'/>
     </div>
     <div class="grid grid-cols-2 gap-4 mb-2">
-        <x-input type="number" label="RUC del transportista" wire:model.lazy='carriage.documentNumber'/>
+        <x-input type="number" label="DNI/RUC del transportista" wire:model.lazy='carriage.documentNumber'/>
         <x-input label="Nombre del Transportista" readonly value="{{ $carriage['name'] }}"/>
     </div>
     <div class="grid grid-cols-3 gap-4 mb-2">

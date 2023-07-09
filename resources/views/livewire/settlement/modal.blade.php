@@ -11,10 +11,9 @@
                 ['name' => 'Sí',  'id' => 1],
                 ['name' => 'No', 'id' => 0],
             ]"
-            wire:model='invoice'
+            wire:model.defer='invoice'
             option-label="name"
             option-value="id"
-            wire:model="model"
         />
         <x-input type="number" label="Cobre Internacional" wire:model.defer='internationalPayment.copper'/>
         <x-input type="number" label="Plata Internacional" wire:model.defer='internationalPayment.silver'/>

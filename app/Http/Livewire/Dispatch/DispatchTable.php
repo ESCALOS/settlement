@@ -18,9 +18,9 @@ class DispatchTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Id", "id")
+            Column::make("Fecha", "date_blending")
                 ->sortable(),
-            Column::make("Created at", "created_at")
+            Column::make("Lote", "batch")
                 ->sortable(),
             Column::make("Updated at", "updated_at")
                 ->sortable(),

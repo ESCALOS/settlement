@@ -138,10 +138,6 @@ class Modal extends Component
     }
 
     public function updatedCarriage():void{
-        if(strlen($this->carriage['documentNumber']) != 11){
-            $this->alert('warning','RUC incorrecto');
-            return;
-        }
         $helper = new Helpers();
         $entity = $helper->searchRuc($this->carriage['documentNumber']);
         if(is_null($entity)){

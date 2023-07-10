@@ -24,7 +24,4 @@ Route::middleware([
 ])->group(function () {
     Route::get('/', [HomeController::class,'index']);
     Route::get('api/concentrate',[ConcentrateController::class,'__invoke'])->name('api.concentrate');
-    Route::get('test',function(){
-        return view('livewire.blending.pdf.preview');
-    });
 });

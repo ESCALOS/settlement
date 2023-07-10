@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Exceptions\ImportErrorException;
 use App\Exports\FormatExport;
+use App\Imports\OrdersImport;
 use App\Imports\ProductImport;
 use App\Imports\WarehouseInputImport;
 use Illuminate\Support\Facades\Response;
@@ -22,7 +23,6 @@ class ImportModal extends Component
     public $openImport = false;
     public $archivo;
     public $fileNumber;
-    public $dependentId;
 
     protected $listeners = ['openImportModal'];
 
@@ -32,23 +32,18 @@ class ImportModal extends Component
         ];
     }
 
-    public function openImportModal(int $id=0):void{
+    public function openImportModal():void{
         $this->fileNumber++;
         $this->archivo = null;
         $this->openImport = true;
-        $this->dependentId = $id;
     }
 
     public function import():void{
         $this->validate();
         try {
             switch ($this->model) {
-                case 'Product':
-                    $model = new ProductImport;
-                    break;
-
-                case 'WarehouseInput':
-                    $model = new WarehouseInputImport($this->dependentId);
+                case 'Order':
+                    $model = new OrdersImport;
                     break;
 
                 default:
@@ -81,9 +76,9 @@ class ImportModal extends Component
                 'toast' => false,
             ]);
         } catch (\Exception $e) {
-            $this->alert('error',$e, [
+            $this->alert('error',$e->getMessage(), [
                 'position' => 'center',
-                'timer' => 3000,
+                'timer' => 10000,
                 'toast' => false,
             ]);
         }

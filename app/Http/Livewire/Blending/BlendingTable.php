@@ -69,5 +69,6 @@ class BlendingTable extends DataTableComponent
 
     public function blending():void{
         $this->emitTo('blending.modal', 'openModal', $this->getSelected(),0);
+        $this->clearSelected();
     }
 }

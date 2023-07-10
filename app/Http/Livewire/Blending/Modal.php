@@ -98,6 +98,7 @@ class Modal extends Component
                             'settlement_id' => $settlement['id'],
                         ],
                         [
+
                             'wmt' => $settlement['wmt_to_blending'],
                             'dnwmt' => $settlement['dnwmt'],
                             'igv' => $settlement['igv'],

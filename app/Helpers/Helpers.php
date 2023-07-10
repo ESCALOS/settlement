@@ -72,7 +72,13 @@ class Helpers
         }
     }
 
-    public function searchRuc($documentNumber):?Entity{
+    /**
+     * Buscar por dni o ruc
+     * @param string $documentNumber Número de DNI/RUC
+     * @return Entity Retorna un objeto del modelo entity o nulo si no lo encuentra
+     * @Nanoka
+     */
+    public function searchRuc(string $documentNumber):?Entity{
         $documentType = $this->checkDocumentNumber($documentNumber);
         if($documentType == ""){
             return null;

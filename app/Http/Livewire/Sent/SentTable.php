@@ -1,30 +1,29 @@
 <?php
 
-namespace App\Http\Livewire\Dispatch;
+namespace App\Http\Livewire\Sent;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Dispatch;
-use App\Models\DispatchDetail;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class DispatchTable extends DataTableComponent
+class SentTable extends DataTableComponent
 {
     use LivewireAlert;
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setSearchLazy();
     }
 
     public function builder(): Builder
     {
         return Dispatch::query()
-            ->where('dispatches.shipped',0)
+            ->where('dispatches.shipped',1)
             ->orderBy('id','DESC');
     }
+
 
     public function columns(): array
     {
@@ -42,22 +41,16 @@ class DispatchTable extends DataTableComponent
             Column::make("Acciones","id")
             ->format(fn ($value) => view('livewire.dispatch.actions',[
                 'id' => $value,
-                'shipped' => false
+                'shipped' => true
             ]))
             ->collapseOnTablet(),
         ];
     }
 
-    public function openModal($id){
-        $settlements = DispatchDetail::where('dispatch_id',$id)->get();
-
-        $this->alert('success',$settlements->count());
-    }
-
-    public function ship($id){
+    public function unship($id){
         try{
             $dispatch = Dispatch::find($id);
-            $dispatch->shipped = true;
+            $dispatch->shipped = false;
             $dispatch->save();
             $this->alert('success','Enviado');
         }catch(\PDOException $e){

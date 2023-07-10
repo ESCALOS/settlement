@@ -14,6 +14,7 @@ class DispatchDetail extends Model
     public function Settlement(){
         return $this->belongsTo(Settlement::class);
     }
+
     public function Dispatch(){
         return $this->belongsTo(Dispatch::class);
     }

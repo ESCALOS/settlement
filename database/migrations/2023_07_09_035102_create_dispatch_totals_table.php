@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('dispatch_totals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('dispatch_id')->constrained();
             $table->decimal('wmt',10,4,true);
             $table->decimal('dnwmt',10,4,true);
             $table->decimal('amount',10,4,true);

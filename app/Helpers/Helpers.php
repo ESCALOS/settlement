@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 use App\Models\Entity;
+use App\Models\Settlement;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -83,7 +84,7 @@ class Helpers
         }
         return $entity;
     }
-    
+
     public static function createBatch(string $table,string $preffix):string{
         $date = $preffix.''.Carbon::now()->isoFormat('YYMM');
         $correlative = '0001';
@@ -94,5 +95,68 @@ class Helpers
             }
         }
         return $date.'-'.$correlative;
+    }
+
+    /**
+     * @param array[] Array de todas las liquidaciones a mezclar en donde debe tener cada liquidacion las llaves:
+     *               - id
+     *               - wmt
+     *               - wmt_to_blending
+     * @return array[] Retorna un array que contiene los siguientes arrays:
+     *               - Settlements: Lidaciones del parametro más los siguientes campos: factor, dnwmt, igv y amount.
+     *               - Law: copper, silver y gold.
+     *               - Penalty: arsenic, antomoy, lead, zinc, bismuth y mercury.
+     *               - Total: wmt, dnwmt y amount
+     */
+    public static function getBlendingData(array $settlements): array{
+        $law = [
+            'copper' => 0,
+            'silver' => 0,
+            'gold' => 0,
+        ];
+        $penalty = [
+            'arsenic' => 0,
+            'antomony' => 0,
+            'lead' => 0,
+            'zinc' => 0,
+            'bismuth' => 0,
+            'mercury' => 0,
+        ];
+        $total = [
+            'wmt' => 0,
+            'dnwmt' => 0,
+            'amount' => 0,
+        ];
+        foreach($settlements as $key => $settlement){
+            $model = Settlement::find($settlement['id']);
+            $fraccion = $settlements[$key]['wmt_to_blending']/$settlements[$key]['wmt'];
+            $settlements[$key]['factor'] = $model->Law->tmns/$model->Order->wmt;
+            $settlements[$key]['dnwmt'] = round($settlements[$key]['wmt_to_blending']*$settlements[$key]['factor'],3);
+            $settlements[$key]['igv'] = round($model->SettlementTotal->igv*$fraccion,2);
+            $settlements[$key]['amount'] = round(($model->SettlementTotal->batch_price+$model->SettlementTotal->igv)*$fraccion,2);
+            $law['copper'] += $settlements[$key]['dnwmt']*$model->Law->copper;
+            $law['silver'] += $settlements[$key]['dnwmt']*$model->Law->silver;
+            $law['gold'] += $settlements[$key]['dnwmt']*$model->Law->gold;
+            $penalty['arsenic'] += $settlements[$key]['dnwmt']*$model->Penalty->arsenic;
+            $penalty['antomony'] += $settlements[$key]['dnwmt']*$model->Penalty->antomony;
+            $penalty['lead'] += $settlements[$key]['dnwmt']*$model->Penalty->lead;
+            $penalty['zinc'] += $settlements[$key]['dnwmt']*$model->Penalty->zinc;
+            $penalty['bismuth'] += $settlements[$key]['dnwmt']*$model->Penalty->bismuth;
+            $penalty['mercury'] += $settlements[$key]['dnwmt']*$model->Penalty->mercury;
+            $total['wmt'] += $settlements[$key]['wmt_to_blending'];
+            $total['dnwmt'] += $settlements[$key]['dnwmt'];
+            $total['amount'] += $settlements[$key]['amount'];
+        }
+        $law['copper'] = number_format($law['copper']/$total['dnwmt'],3);
+        $law['silver'] = number_format($law['silver']/$total['dnwmt'],3);
+        $law['gold'] = number_format($law['gold']/$total['dnwmt'],3);
+        $penalty['arsenic'] = number_format($penalty['arsenic']/$total['dnwmt'],3);
+        $penalty['antomony'] = number_format($penalty['antomony']/$total['dnwmt'],3);
+        $penalty['lead'] = number_format($penalty['lead']/$total['dnwmt'],3);
+        $penalty['zinc'] = number_format($penalty['zinc']/$total['dnwmt'],3);
+        $penalty['bismuth'] = number_format($penalty['bismuth']/$total['dnwmt'],3);
+        $penalty['mercury'] = number_format($penalty['mercury']/$total['dnwmt'],3);
+
+        return [$settlements,$law,$penalty,$total];
     }
 }

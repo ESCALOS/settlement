@@ -19,6 +19,7 @@ class SettlementTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects(['settlements.wmt_shipped']);
         $this->setSearchLazy();
     }
 
@@ -42,7 +43,11 @@ class SettlementTable extends DataTableComponent
             Column::make("TMH","Order.wmt")
                 ->format(fn ($value) => number_format($value,2)),
             Column::make("Cliente",'Order.Client.name')
-                ->searchable(),
+                ->searchable()
+                ->collapseOnTablet(),
+            Column::make("Total","SettlementTotal.total")
+                ->format(fn ($value) => '$ '.number_format($value,2))
+                ->collapseOnTablet(),
             Column::make("Acciones","id")
             ->format(fn ($value,$row) => view('livewire.settlement.actions',[
                 'id' => $value,

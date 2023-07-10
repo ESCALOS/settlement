@@ -19,11 +19,14 @@
                     <x-nav-link href="{{ route('admin.settlements') }}" :active="request()->routeIs('admin.settlements')">
                         {{ __('Settlements') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('admin.blending') }}" :active="request()->routeIs('admin.blending')">
+                    <x-nav-link href="{{ route('admin.blendings') }}" :active="request()->routeIs('admin.blendings')">
                         {{ __('Blending') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('admin.dispatch') }}" :active="request()->routeIs('admin.dispatch')">
+                    <x-nav-link href="{{ route('admin.dispatches') }}" :active="request()->routeIs('admin.dispatches')">
                         {{ __('Dispatch') }}
+                    </x-nav-link>
+                    <x-nav-link href="{{ route('admin.sents') }}" :active="request()->routeIs('admin.sents')">
+                        {{ __('Blendings Sent') }}
                     </x-nav-link>
                 @endrole
                 </div>
@@ -142,11 +145,14 @@
             <x-responsive-nav-link href="{{ route('admin.orders') }}" :active="request()->routeIs('admin.orders')">
                 {{ __('Settlements') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.blending') }}" :active="request()->routeIs('admin.blending')">
+            <x-responsive-nav-link href="{{ route('admin.blendings') }}" :active="request()->routeIs('admin.blendings')">
                 {{ __('Blending') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.dispatch') }}" :active="request()->routeIs('admin.dispatch')">
+            <x-responsive-nav-link href="{{ route('admin.dispatches') }}" :active="request()->routeIs('admin.dispatches')">
                 {{ __('Dispatch') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('admin.sents') }}" :active="request()->routeIs('admin.sents')">
+                {{ __('Blendings Sent') }}
             </x-responsive-nav-link>
             @endrole
         </div>

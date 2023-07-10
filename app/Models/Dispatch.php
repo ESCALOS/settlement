@@ -14,4 +14,16 @@ class Dispatch extends Model
     public function details(){
         return $this->hasMany(DispatchDetail::class);
     }
+
+    public function Law(){
+        return $this->hasOne(DispatchLaw::class);
+    }
+
+    public function Penalty(){
+        return $this->hasOne(DispatchPenalty::class);
+    }
+
+    public function Total(){
+        return $this->hasOne(DispatchTotal::class);
+    }
 }

@@ -5,6 +5,9 @@ namespace App\Http\Livewire\Blending;
 use App\Helpers\Helpers;
 use App\Models\Dispatch;
 use App\Models\DispatchDetail;
+use App\Models\DispatchLaw;
+use App\Models\DispatchPenalty;
+use App\Models\DispatchTotal;
 use App\Models\Settlement;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -76,11 +79,16 @@ class Modal extends Component
                     'user_id' => Auth::user()->id,
                     'date_blending' => $this->date,
                 ]);
-                foreach($this->settlements as $settlement){
+                [$settlements,$law,$penaly,$total] = Helpers::getBlendingData($this->settlements);
+                foreach($settlements as $settlement){
                     DispatchDetail::create([
                         'dispatch_id' => $dispatch->id,
                         'settlement_id' => $settlement['id'],
-                        'wmt' => $settlement['wmt_to_blending']
+                        'wmt' => $settlement['wmt_to_blending'],
+                        'dnwmt' => $settlement['dnwmt'],
+                        'igv' => $settlement['igv'],
+                        'amount' => $settlement['amount']
+
                     ]);
                     $blended = DB::table('dispatch_details')
                         ->where('settlement_id', $settlement['id'])
@@ -89,6 +97,30 @@ class Modal extends Component
                         throw new \Exception("Datos modificados, actualice la página");
                     }
                 }
+                DispatchLaw::create([
+                    'dispatch_id' => $dispatch->id,
+                    'copper' => $law['copper'],
+                    'silver' => $law['silver'],
+                    'gold' => $law['gold'],
+                ]);
+
+                DispatchPenalty::create([
+                    'dispatch_id' => $dispatch->id,
+                    'arsenic' => $penaly['arsenic'],
+                    'antomony' => $penaly['antomony'],
+                    'lead' => $penaly['lead'],
+                    'zinc' => $penaly['zinc'],
+                    'bismuth' => $penaly['bismuth'],
+                    'mercury' => $penaly['mercury'],
+                ]);
+
+                DispatchTotal::create([
+                    'dispatch_id' => $dispatch->id,
+                    'wmt' => $total['wmt'],
+                    'dnwmt' => $total['dnwmt'],
+                    'amount' => $total['amount'],
+                ]);
+
                 $this->alert('success', '¡Blending Exitoso!', [
                     'position' => 'center',
                     'timer' => 2000,

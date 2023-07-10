@@ -16,6 +16,7 @@ class BlendingTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects(['settlements.wmt_shipped']);
         $this->setSearchLazy();
         $this->setBulkActions([
             'blending' => 'Mezclar',

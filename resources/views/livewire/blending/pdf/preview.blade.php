@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<title>Liquidación BATCH - Innova Mining Company</title>
+	<title>Detalles del Blending - Innova Mining Company</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -67,15 +67,17 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($settlements as $settlement)
                     <tr>
-                        <td>BATCH LIQUIDACION</td>
-                        <td>CONCENTRADO</td>
-                        <td>TMH</td>
-                        <td>TMNS</td>
-                        <td>$ SUBTOTAL</td>
-                        <td>$ IGV</td>
-                        <td>$ TOTAL</td>
+                        <td>{{ $settlement['batch'] }}</td>
+                        <td>{{ $settlement['concentrate'] }}</td>
+                        <td>{{ number_format($settlement['wmt_to_blending'],3) }}</td>
+                        <td>{{ number_format($settlement['dnwmt'],3) }}</td>
+                        <td>$ {{ number_format($settlement['amount'] - $settlement['igv'],2) }}</td>
+                        <td>$ {{ number_format($settlement['igv'],2) }}</td>
+                        <td>$ {{ number_format($settlement['amount'],2) }}</td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
             <div>
@@ -93,9 +95,9 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>PROMEDIO COBRE</td>
-                        <td>PROMEDIO PLATA</td>
-                        <td>PROMEDIO ORO</td>
+                        <td>{{ $law['copper'] }}</td>
+                        <td>{{ $law['silver'] }}</td>
+                        <td>{{ $law['gold'] }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -114,27 +116,27 @@
                 <tbody>
                     <tr>
                         <td>As</td>
-                        <td></td>
+                        <td>{{ $penalty['arsenic'] }}</td>
                     </tr>
                     <tr>
                         <td>Sb</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Bi</td>
-                        <td></td>
+                        <td>{{ $penalty['antomony'] }}</td>
                     </tr>
                     <tr>
                         <td>Pb</td>
-                        <td></td>
+                        <td>{{ $penalty['lead'] }}</td>
                     </tr>
                     <tr>
                         <td>Zn</td>
-                        <td></td>
+                        <td>{{ $penalty['zinc'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Bi</td>
+                        <td>{{ $penalty['bismuth'] }}</td>
                     </tr>
                     <tr>
                         <td>Hg</td>
-                        <td></td>
+                        <td>{{ $penalty['mercury'] }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -153,9 +155,9 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row"></th>
-                        <th scope="row"></th>
-                        <th scope="row">$</th>
+                        <th scope="row">{{ number_format($total['wmt'],3) }}</th>
+                        <th scope="row">{{ number_format($total['dnwmt'],3) }}</th>
+                        <th scope="row">$ {{ number_format($total['amount'],2) }}</th>
                     </tr>
                 </tbody>
             </table>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Blending;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\Helpers;
 use Livewire\Component;
 
@@ -34,6 +35,22 @@ class Preview extends Component
         $this->resetExcept('open');
         [$this->settlements,$this->law,$this->penalty,$this->total] = Helpers::getBlendingData($settlements);
         $this->open = true;
+    }
+
+    public function printBlending(){
+        $data = [
+            'settlements' => $this->settlements,
+            'law' => $this->law,
+            'penalty' => $this->penalty,
+            'total' => $this->total
+        ];
+        $titulo = "Detalles del blending.pdf";
+        $pdfContent = PDF::loadView('livewire.blending.pdf.preview', $data)->setPaper('a4','portrait')->output();
+
+        return response()->streamDownload(
+            fn () => print($pdfContent),
+            $titulo
+        );
     }
 
     public function render()

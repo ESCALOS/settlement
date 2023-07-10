@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('dispatch_laws', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dispatch_id')->constrained();
+            $table->foreignId('dispatch_id')->constrained()->onDelete('cascade');
             $table->decimal('copper',10,4,true);
             $table->decimal('silver',10,4,true);
             $table->decimal('gold',10,4,true);

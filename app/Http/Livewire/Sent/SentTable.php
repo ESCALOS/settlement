@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Sent;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Dispatch;
+use App\Models\DispatchDetail;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -45,6 +46,20 @@ class SentTable extends DataTableComponent
             ]))
             ->collapseOnTablet(),
         ];
+    }
+
+    public function openModal($id){
+        $settlements = [];
+        $dispatchDetails = DispatchDetail::where('dispatch_id', $id)->get();
+        foreach($dispatchDetails as $key => $dispatchDetail){
+            $settlements[$key]['id'] = $dispatchDetail->settlement_id;
+            $settlements[$key]['batch'] = $dispatchDetail->Settlement->batch;
+            $settlements[$key]['concentrate'] = $dispatchDetail->Settlement->Order->Concentrate->concentrate;
+            $settlements[$key]['wmt'] = $dispatchDetail->Settlement->Order->wmt;
+            $settlements[$key]['wmt_to_blending'] = $dispatchDetail->wmt;
+
+        }
+        $this->emitTo('blending.preview','openModal',$settlements);
     }
 
     public function unship($id){

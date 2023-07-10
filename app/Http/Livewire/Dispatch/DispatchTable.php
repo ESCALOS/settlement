@@ -7,6 +7,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Dispatch;
 use App\Models\DispatchDetail;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class DispatchTable extends DataTableComponent
@@ -52,6 +53,20 @@ class DispatchTable extends DataTableComponent
         $settlements = DispatchDetail::where('dispatch_id',$id)->get();
 
         $this->alert('success',$settlements->count());
+    }
+
+    public function delete($id){
+        try{
+            DB::transaction(function () use($id) {
+                DispatchDetail::where('dispatch_id',$id)->delete();
+                Dispatch::find($id)->delete();
+                $this->alert('success','Mezcla deshecha');
+            });
+        }catch(\PDOException $e){
+            $this->alert('error',$e->getMessage());
+        }catch(\Exception $e){
+            $this->alert('error',$e->getMessage());
+        }
     }
 
     public function ship($id){

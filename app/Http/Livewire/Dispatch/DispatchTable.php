@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Dispatch;
 
+use App\Helpers\Helpers;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Dispatch;
@@ -50,9 +51,8 @@ class DispatchTable extends DataTableComponent
     }
 
     public function openModal($id){
-        $settlements = DispatchDetail::where('dispatch_id',$id)->get();
-
-        $this->alert('success',$settlements->count());
+        $settlements = Helpers::getDispatchDetails($id);
+        $this->emitTo('blending.modal','openModal',$settlements,$id);
     }
 
     public function delete($id){

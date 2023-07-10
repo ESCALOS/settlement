@@ -3,4 +3,5 @@
     <div class="p-4">
         <livewire:dispatch.dispatch-table>
     </div>
+    <livewire:blending.modal>
 </div>

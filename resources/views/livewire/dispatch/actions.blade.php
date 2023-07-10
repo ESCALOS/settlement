@@ -1,6 +1,6 @@
 <div>
     @if ($shipped)
-    <x-button.circle title="Ver" spinner="openModal" sky icon="eye" wire:click="openModal({{ $id }})"/>
+    <x-button.circle title="Ver" spinner="openPreview" sky icon="eye" wire:click="openPreview({{ $id }})"/>
     <x-button.circle title="Anular Envío" negative icon="arrow-left"
     x-on:confirm="{
         title: '¿Seguro de anular el envío?',

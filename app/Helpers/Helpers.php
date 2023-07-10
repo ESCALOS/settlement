@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Helpers;
+
+use App\Models\DispatchDetail;
 use App\Models\Entity;
 use App\Models\Settlement;
 use Illuminate\Support\Carbon;
@@ -158,5 +160,25 @@ class Helpers
         $penalty['mercury'] = number_format($penalty['mercury']/$total['dnwmt'],3);
 
         return [$settlements,$law,$penalty,$total];
+    }
+
+    /**
+     * Recibe el id del despacho y retorna los datos del detalle de las liquidaciones
+     * @param int $id El id del despacho
+     * @return array Retorna el detalle de las liquidaciones
+     */
+    public static function getDispatchDetails($id):array{
+        $settlements = [];
+        $dispatchDetails = DispatchDetail::where('dispatch_id', $id)->get();
+        foreach($dispatchDetails as $key => $dispatchDetail){
+            $blended = DispatchDetail::where('settlement_id',$dispatchDetail->Settlement->id)->where('dispatch_id','<>',$id)->sum('wmt');
+            $settlements[$key]['id'] = $dispatchDetail->settlement_id;
+            $settlements[$key]['batch'] = $dispatchDetail->Settlement->batch;
+            $settlements[$key]['concentrate'] = $dispatchDetail->Settlement->Order->Concentrate->concentrate;
+            $settlements[$key]['wmt'] = number_format($dispatchDetail->Settlement->Order->wmt,3);
+            $settlements[$key]['wmt_missing'] = number_format($dispatchDetail->Settlement->Order->wmt - $blended,3);
+            $settlements[$key]['wmt_to_blending'] = number_format($dispatchDetail->wmt);
+        }
+        return $settlements;
     }
 }

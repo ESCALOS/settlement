@@ -19,7 +19,7 @@
         <x-input label="Plata" readonly  value="{{ $law['silver'] }}"/>
         <x-input label="Oro" readonly  value="{{ $law['gold'] }}"/>
     </div>
-    <div class="w-full py-2 mt-4 rounded-lg bg-red-600">
+    <div class="w-full py-2 mt-4 bg-red-600 rounded-lg">
         <h1 class="text-xl font-bold text-center text-white">Promedio de Penalidades</h1>
     </div>
     <div class="grid grid-cols-6 gap-4 p-4">
@@ -30,7 +30,7 @@
         <x-input label="Bismuto" readonly  value="{{ $penalty['bismuth'] }}"/>
         <x-input label="Mercurio" readonly  value="{{ $penalty['mercury'] }}"/>
     </div>
-    <div class="w-full py-2 mt-4 rounded-lg bg-green-600">
+    <div class="w-full py-2 mt-4 bg-green-600 rounded-lg">
         <h1 class="text-xl font-bold text-center text-white">Total</h1>
     </div>
     <div class="grid grid-cols-3 gap-4 p-4">

@@ -107,7 +107,7 @@
                         </x-slot>
                         <x-dropdown.item icon="user-circle" label="{{ __('Profile') }}"  href="{{ route('profile.show') }}"/>
                         @if (Auth::user()->is_admin)
-                        <x-dropdown.item icon="cog" label="{{ __('Settings') }}"  href="/admin"/>
+                        <x-dropdown.item icon="cog" label="{{ __('Settings') }}" target="_blank"  href="/admin"/>
                         @endif
                         <x-dropdown.item icon="logout" separator>
                             <form method="POST" action="{{ route('logout') }}" x-data>

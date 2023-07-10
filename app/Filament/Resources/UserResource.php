@@ -38,7 +38,6 @@ class UserResource extends Resource
                     ->label('Contraseña')
                     ->password()
                     ->required()
-                    ->hiddenOn('edit')
                     ->maxLength(255),
                 Forms\Components\Select::make('roles')
                     ->label('Roles')

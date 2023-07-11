@@ -24,7 +24,7 @@
                 </tr>
                 <tr>
                     <td style="border: 2px solid black;padding: 1rem;text-align: center">Ag Oz/TC</td>
-                    <td style="border: 2px solid black;padding: 1rem;text-align: center">{{ floor($settlement->Law->silver*$settlement->Law->silver_factor*1000)/1000 }}</td>
+                    <td style="border: 2px solid black;padding: 1rem;text-align: center">{{ floor($settlement->Law->silver*$settlement->Law->silver_factor*100000)/100000 }}</td>
                     <td style="border: 2px solid black;padding: 1rem;text-align: center">{{ floatval($settlement->PercentagePayable->silver) }}%</td>
                     <td style="border: 2px solid black;padding: 1rem;text-align: center">{{ floatval($settlement->Deduction->silver) }}</td>
                     <td style="border: 2px solid black;padding: 1rem;text-align: center">$ {{ number_format($settlement->PayableTotal->unit_price_silver,3) }}</td>
@@ -32,7 +32,7 @@
                 </tr>
                 <tr>
                     <td style="border: 2px solid black;padding: 1rem;text-align: center">Au Oz/TC</td>
-                    <td style="border: 2px solid black;padding: 1rem;text-align: center">{{ floor($settlement->Law->gold*$settlement->Law->gold_factor*1000)/1000 }}</td>
+                    <td style="border: 2px solid black;padding: 1rem;text-align: center">{{ floor($settlement->Law->gold*$settlement->Law->gold_factor*100000)/100000 }}</td>
                     <td style="border: 2px solid black;padding: 1rem;text-align: center">{{ floatval($settlement->PercentagePayable->gold) }}%</td>
                     <td style="border: 2px solid black;padding: 1rem;text-align: center">{{ floatval($settlement->Deduction->gold) }}</td>
                     <td style="border: 2px solid black;padding: 1rem;text-align: center">$ {{ number_format($settlement->PayableTotal->unit_price_gold,3) }}</td>

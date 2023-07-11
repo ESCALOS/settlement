@@ -183,7 +183,7 @@ class Helpers
             $settlements[$key]['concentrate'] = $dispatchDetail->Settlement->Order->Concentrate->concentrate;
             $settlements[$key]['wmt'] = number_format($dispatchDetail->Settlement->Order->wmt,3);
             $settlements[$key]['wmt_missing'] = number_format($dispatchDetail->Settlement->Order->wmt - $blended,3);
-            $settlements[$key]['wmt_to_blending'] = number_format($dispatchDetail->wmt);
+            $settlements[$key]['wmt_to_blending'] = $dispatchDetail->wmt;
         }
         return $settlements;
     }

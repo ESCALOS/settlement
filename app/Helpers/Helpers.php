@@ -37,39 +37,44 @@ class Helpers
      */
     public static function getEntityApi(int $documentNumber, string $documentType): ?Entity
     {
-        // Iniciar llamada a API
-        $curl = curl_init();
+        try {
+            // Iniciar llamada a API
+            $curl = curl_init();
 
-        // Buscar ruc sunat
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.apis.net.pe/v1/' . $documentType . '?numero=' . $documentNumber,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Referer: http://apis.net.pe/api-ruc',
-                'Authorization: Bearer ' . env('API_SUNAT')
-            ),
-        ));
+            // Buscar ruc sunat
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.apis.net.pe/v1/' . $documentType . '?numero=' . $documentNumber,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Referer: http://apis.net.pe/api-ruc',
+                    'Authorization: Bearer ' . env('API_SUNAT')
+                ),
+            ));
 
-        $response = curl_exec($curl);
+            $response = curl_exec($curl);
 
-        curl_close($curl);
-        $company = json_decode($response);
-        if (isset($company->numeroDocumento)) {
-            $entity = Entity::create([
-                'document_number' => $company->numeroDocumento,
-                'name' => strtoupper($company->nombre),
-                'address' => strtoupper($company->direccion)
-            ]);
-            return $entity;
-        } else {
+            curl_close($curl);
+            $company = json_decode($response);
+            if (isset($company->numeroDocumento)) {
+                $entity = Entity::create([
+                    'document_number' => $company->numeroDocumento,
+                    'name' => strtoupper($company->nombre),
+                    'address' => strtoupper($company->direccion)
+                ]);
+                return $entity;
+            } else {
+                return null;
+            }
+        } catch (\Throwable $th) {
             return null;
         }
+
     }
 
     /**
@@ -93,6 +98,11 @@ class Helpers
         return $entity;
     }
 
+    /**
+     * @param string $table Nombre de la tabla
+     * @param string $preffix Prefijo del correlativo
+     * @return string El correlativo del lote
+     */
     public static function createBatch(string $table,string $preffix):string{
         $date = $preffix.''.Carbon::now()->isoFormat('YYMM');
         $correlative = '0001';

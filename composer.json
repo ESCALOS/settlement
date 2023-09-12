@@ -20,7 +20,8 @@
         "spatie/laravel-permission": "^5.10",
         "symfony/http-client": "^6.2",
         "symfony/mailgun-mailer": "^6.2",
-        "wireui/wireui": "^1.17"
+        "wireui/wireui": "^1.17",
+        "predis/predis": "^2.2"
     },
     "require-dev": {
         "doctrine/dbal": "^3.6",
@@ -59,6 +60,18 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-install-cmd": [
+          "find .\/bootstrap\/cache -type d -exec chmod g+s {} \\;",
+          "find .\/storage -type d -exec chmod g+s {} \\;",
+          "find .\/app\/bootstrap\/cache -type d -exec chmod g+s {} \\;",
+          "chmod -R 777 .\/bootstrap\/cache",
+          "chmod -R 777 .\/app\/bootstrap\/cache",
+          "chmod -R 777 .\/storage\/logs",
+          "php artisan cache:clear",
+          "php artisan route:cache",
+          "php artisan config:cache",
+          "php artisan view:cache"
         ]
     },
     "extra": {

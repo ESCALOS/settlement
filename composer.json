@@ -64,10 +64,8 @@
         "post-install-cmd": [
           "find .\/bootstrap\/cache -type d -exec chmod g+s {} \\;",
           "find .\/storage -type d -exec chmod g+s {} \\;",
-          "find .\/app\/bootstrap\/cache -type d -exec chmod g+s {} \\;",
-          "chmod -R 777 .\/bootstrap\/cache",
-          "chmod -R 777 .\/app\/bootstrap\/cache",
-          "chmod -R 777 .\/storage\/logs",
+          "chmod -R 755 .\/bootstrap\/cache",
+          "chmod -R 755 .\/storage\/logs",
           "php artisan cache:clear",
           "php artisan route:cache",
           "php artisan config:cache",
